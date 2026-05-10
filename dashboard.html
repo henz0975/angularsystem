@@ -1171,129 +1171,1418 @@
 </section>
 
     <section
-  class="section page"
+  class="section page users-page"
   *ngIf="activePage === 'find-users'"
 >
-      <h3>🔎 <span data-i18n="find_users">Find User Profile</span></h3>
-      <input id="user-search" placeholder="Search name, username, or ID..." />
-      <div id="user-results" class="user-results"></div>
-    </section>
 
-    <section
-  class="section page"
-  *ngIf="activePage === 'settings'"
->
-      <h3>⚙️ <span data-i18n="settings">Settings</span></h3>
-      <div class="card">
-        <h4><span data-i18n="appearance">Appearance</span></h4>
-        <div style="display:flex;gap:10px;align-items:center">
-          <label class="muted small" data-i18n="accent">Accent</label>
-          <div style="display:flex;gap:8px">
+  <!-- =========================
+       ADMIN FIND USERS
+  ========================== -->
 
-  <button
-    class="accent-btn"
-    data-accent="#FFC72C"
-    (click)="setAccent('#FFC72C')"
-    title="USTP Gold"
-  ></button>
+  <div *ngIf="isAdmin">
 
-  <button
-    class="accent-btn"
-    data-accent="#1DB7C8"
-    (click)="setAccent('#1DB7C8')"
-    title="Teal"
-  ></button>
+    <!-- HERO -->
+    <div class="users-hero admin-users-hero">
 
-  <button
-    class="accent-btn"
-    data-accent="#7C4DFF"
-    (click)="setAccent('#7C4DFF')"
-    title="Purple"
-  ></button>
+      <div>
 
-  <button
-    class="accent-btn"
-    data-accent="#FF6B6B"
-    (click)="setAccent('#FF6B6B')"
-    title="Red"
-  ></button>
+        <span class="users-badge">
+          USER MANAGEMENT
+        </span>
 
-</div>
-        </div>
+        <h1>
+          👥 Student Directory
+        </h1>
 
-        <hr/>
+        <p>
+          Search, monitor, and manage
+          all registered student accounts,
+          borrowing activity, and profiles.
+        </p>
 
-        <h4><span data-i18n="language">Language</span></h4>
-        <select
-  id="language-select"
-  (change)="setLanguage($any($event.target).value)"
->
-          <option value="en">English</option>
-          <option value="tl">Tagalog</option>
-          <option value="ceb">Bisaya</option>
+      </div>
+
+      <div class="users-hero-icon">
+        🛡️
+      </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="users-stats-grid">
+
+      <div class="users-stat-card blue-users">
+
+        <h2>{{ totalUsers }}</h2>
+
+        <p>Total Students</p>
+
+      </div>
+
+      <div class="users-stat-card purple-users">
+
+        <h2>124</h2>
+
+        <p>Active Borrowers</p>
+
+      </div>
+
+      <div class="users-stat-card green-users">
+
+        <h2>87%</h2>
+
+        <p>Active Accounts</p>
+
+      </div>
+
+      <div class="users-stat-card orange-users">
+
+        <h2>12</h2>
+
+        <p>Overdue Students</p>
+
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="users-controls-card">
+
+      <div class="users-search-box">
+
+        <span>🔎</span>
+
+        <input
+          type="text"
+          [(ngModel)]="userSearch"
+          placeholder="Search student name, ID, username..."
+        >
+
+      </div>
+
+      <div class="users-filter-actions">
+
+        <select class="modern-users-select">
+
+          <option>All Students</option>
+          <option>Borrowers</option>
+          <option>Overdue</option>
+
         </select>
 
-        <hr/>
+        <button class="users-action-btn">
+          ➕ Add Student
+        </button>
 
-        <h4><span data-i18n="account">Account</span></h4>
-        <div style="display:flex;gap:10px;align-items:center">
-          <button
-  class="btn"
-  (click)="resetDemo()"
->
-  Reset Demo Data
-</button>
-
-<button
-  class="btn"
-  (click)="exportAllData()"
->
-  Export Data
-</button>
-        </div>
       </div>
-    </section>
+
+    </div>
+
+    <!-- USER GRID -->
+    <div class="users-grid">
+
+      <div
+        class="modern-user-card"
+        *ngFor="let user of users"
+      >
+
+        <!-- TOP -->
+        <div class="user-card-top">
+
+          <img
+            [src]="
+              user.profileImage ||
+              defaultAvatar(user.sex)
+            "
+            class="modern-user-avatar"
+          >
+
+          <div class="online-indicator"></div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="modern-user-content">
+
+          <h2>{{ user.fullName }}</h2>
+
+          <p>
+            {{ user.role }}
+          </p>
+
+          <div class="user-details-list">
+
+            <div>
+              🆔 {{ user.studentId }}
+            </div>
+
+            <div>
+              📍 {{ user.city || 'Unknown City' }}
+            </div>
+
+            <div>
+              📚 4 Borrowed Books
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="modern-user-actions">
+
+          <button
+  class="view-user-btn"
+  (click)="viewUser(user)"
+>
+            👁 View
+          </button>
+
+          <button
+  class="message-user-btn"
+  (click)="messageUser(user)"
+>
+            💬 Message
+          </button>
+
+          <button
+  class="delete-user-btn"
+  (click)="removeUser(user)"
+>
+            🗑 Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       STUDENT FIND USERS
+  ========================== -->
+
+  <div *ngIf="!isAdmin">
+
+    <!-- HERO -->
+    <div class="users-hero student-users-hero">
+
+      <div>
+
+        <span class="users-badge">
+          COMMUNITY HUB
+        </span>
+
+        <h1>
+          🎓 Find Classmates
+        </h1>
+
+        <p>
+          Discover fellow students,
+          connect with readers,
+          and explore the library community.
+        </p>
+
+      </div>
+
+      <div class="users-hero-icon">
+        📚
+      </div>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="student-search-card">
+
+      <div class="users-search-box">
+
+        <span>🔎</span>
+
+        <input
+          type="text"
+          [(ngModel)]="userSearch"
+          placeholder="Search classmates..."
+        >
+
+      </div>
+
+    </div>
+
+    <!-- FEATURED USERS -->
+    <div class="featured-users-section">
+
+      <div class="section-header-users">
+
+        <h2>
+          ⭐ Top Readers
+        </h2>
+
+      </div>
+
+      <div class="featured-users-grid">
+
+        <div
+          class="featured-user-card"
+          *ngFor="let user of users.slice(0,6)"
+        >
+
+          <img
+            [src]="
+              user.profileImage ||
+              defaultAvatar(user.sex)
+            "
+            class="featured-user-avatar"
+          >
+
+          <h3>{{ user.fullName }}</h3>
+
+          <p>{{ user.city || 'Student' }}</p>
+
+          <div class="reader-level">
+            📚 Advanced Reader
+          </div>
+
+          <button class="connect-btn">
+            ➕ Connect
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ACTIVE USERS -->
+    <div class="active-readers-section">
+
+      <div class="section-header-users">
+
+        <h2>
+          🔥 Active Readers
+        </h2>
+
+      </div>
+
+      <div class="active-users-list">
+
+        <div
+          class="active-user-item"
+          *ngFor="let user of users.slice(0,5)"
+        >
+
+          <div class="active-user-left">
+
+            <img
+              [src]="
+                user.profileImage ||
+                defaultAvatar(user.sex)
+              "
+              class="active-user-avatar"
+            >
+
+            <div>
+
+              <h4>{{ user.fullName }}</h4>
+
+              <p>
+                Reading Programming Books
+              </p>
+
+            </div>
+
+          </div>
+
+          <button class="chat-btn">
+            💬 Chat
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
     <section
-  class="section page"
+  class="section page settings-page"
+  *ngIf="activePage === 'settings'"
+>
+
+  <!-- =========================
+       ADMIN SETTINGS
+  ========================== -->
+
+  <div *ngIf="isAdmin">
+
+    <!-- HERO -->
+    <div class="settings-hero admin-settings-hero">
+
+      <div>
+
+        <span class="settings-badge">
+          ADMIN SETTINGS
+        </span>
+
+        <h1>
+          ⚙️ System Control Center
+        </h1>
+
+        <p>
+          Customize the entire library system,
+          security preferences, dashboard behavior,
+          themes, and admin controls.
+        </p>
+
+      </div>
+
+      <div class="settings-hero-icon">
+        🛡️
+      </div>
+
+    </div>
+
+    <!-- SETTINGS GRID -->
+    <div class="settings-grid">
+
+      <!-- APPEARANCE -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>🎨 Appearance</h2>
+
+          <span>
+            Customize system look
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Dark Mode</h4>
+
+            <p>
+              Enable modern dark theme
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input
+              type="checkbox"
+              (change)="toggleTheme()"
+            >
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Accent Colors</h4>
+
+            <p>
+              Change dashboard theme
+            </p>
+
+          </div>
+
+          <div class="color-palette">
+
+            <button
+              class="color-circle gold"
+              (click)="setAccent('#FFC72C')"
+            ></button>
+
+            <button
+              class="color-circle blue"
+              (click)="setAccent('#2563eb')"
+            ></button>
+
+            <button
+              class="color-circle purple"
+              (click)="setAccent('#7c3aed')"
+            ></button>
+
+            <button
+              class="color-circle green"
+              (click)="setAccent('#059669')"
+            ></button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SECURITY -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>🔒 Security</h2>
+
+          <span>
+            Admin protection settings
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Two Factor Authentication</h4>
+
+            <p>
+              Add extra admin protection
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input type="checkbox">
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Auto Logout</h4>
+
+            <p>
+              Auto sign out after inactivity
+            </p>
+
+          </div>
+
+          <select class="modern-select">
+
+            <option>10 Minutes</option>
+            <option>30 Minutes</option>
+            <option>1 Hour</option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <!-- LIBRARY SETTINGS -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>📚 Library Preferences</h2>
+
+          <span>
+            Borrowing configurations
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Borrow Limit</h4>
+
+            <p>
+              Max books per student
+            </p>
+
+          </div>
+
+          <input
+            type="number"
+            value="5"
+            class="modern-input"
+          >
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Fine Per Day</h4>
+
+            <p>
+              Penalty amount for overdue
+            </p>
+
+          </div>
+
+          <input
+            type="number"
+            value="20"
+            class="modern-input"
+          >
+
+        </div>
+
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>🔔 Notifications</h2>
+
+          <span>
+            Manage alerts and reminders
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Email Notifications</h4>
+
+            <p>
+              Receive important alerts
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input type="checkbox" checked>
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Push Notifications</h4>
+
+            <p>
+              Real-time dashboard alerts
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input type="checkbox" checked>
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- SYSTEM -->
+      <div class="settings-card wide-settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>🖥️ System Management</h2>
+
+          <span>
+            Data & backup tools
+          </span>
+
+        </div>
+
+        <div class="system-actions">
+
+          <button class="system-btn export-btn">
+            📤 Export Data
+          </button>
+
+          <button class="system-btn backup-btn">
+            💾 Backup Database
+          </button>
+
+          <button class="system-btn reset-btn">
+            🔄 Reset Demo
+          </button>
+
+          <button class="system-btn danger-btn">
+            🗑 Delete Logs
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       STUDENT SETTINGS
+  ========================== -->
+
+  <div *ngIf="!isAdmin">
+
+    <!-- HERO -->
+    <div class="settings-hero student-settings-hero">
+
+      <div>
+
+        <span class="settings-badge">
+          PERSONAL SETTINGS
+        </span>
+
+        <h1>
+          👤 Student Preferences
+        </h1>
+
+        <p>
+          Customize your library experience,
+          notifications, appearance, and profile settings.
+        </p>
+
+      </div>
+
+      <div class="settings-hero-icon">
+        🎓
+      </div>
+
+    </div>
+
+    <!-- STUDENT GRID -->
+    <div class="settings-grid">
+
+      <!-- PROFILE -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>👤 Profile Settings</h2>
+
+          <span>
+            Manage personal information
+          </span>
+
+        </div>
+
+        <div class="profile-settings-box">
+
+          <img
+            [src]="
+              currentUser?.profileImage ||
+              defaultAvatar(currentUser?.sex)
+            "
+            class="settings-profile-img"
+          >
+
+          <button class="upload-profile-btn">
+            Change Photo
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- APPEARANCE -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>🎨 Appearance</h2>
+
+          <span>
+            Personalize dashboard look
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Dark Mode</h4>
+
+            <p>
+              Better night experience
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input
+              type="checkbox"
+              (change)="toggleTheme()"
+            >
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Theme Color</h4>
+
+            <p>
+              Select preferred theme
+            </p>
+
+          </div>
+
+          <div class="color-palette">
+
+            <button
+              class="color-circle purple"
+              (click)="setAccent('#7c3aed')"
+            ></button>
+
+            <button
+              class="color-circle blue"
+              (click)="setAccent('#2563eb')"
+            ></button>
+
+            <button
+              class="color-circle pink"
+              (click)="setAccent('#db2777')"
+            ></button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>🔔 Notifications</h2>
+
+          <span>
+            Reminder preferences
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Borrow Reminders</h4>
+
+            <p>
+              Notify before due date
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input type="checkbox" checked>
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Library Events</h4>
+
+            <p>
+              Receive event announcements
+            </p>
+
+          </div>
+
+          <label class="modern-switch">
+
+            <input type="checkbox" checked>
+
+            <span></span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- READING -->
+      <div class="settings-card">
+
+        <div class="settings-card-header">
+
+          <h2>📖 Reading Preferences</h2>
+
+          <span>
+            Customize recommendations
+          </span>
+
+        </div>
+
+        <div class="setting-item">
+
+          <div>
+
+            <h4>Preferred Category</h4>
+
+            <p>
+              Improve recommendation system
+            </p>
+
+          </div>
+
+          <select class="modern-select">
+
+            <option>Programming</option>
+            <option>Science</option>
+            <option>History</option>
+            <option>Mathematics</option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+    <section
+  class="section page announcements-page"
   *ngIf="activePage === 'announcements'"
 >
-      <h3>📢 <span data-i18n="announcements">Announcements</span></h3>
-      <div id="ann-list"></div>
 
-      <div id="admin-ann-form" style="display:none;margin-top:12px" class="card">
-        <h4><span data-i18n="post_ann">Post Announcement (Admin)</span></h4>
-        <form id="post-ann-form">
-          <label><span data-i18n="title">Title</span><input type="text" id="ann-title" maxlength="80" required /></label>
-          <label><span data-i18n="message">Message</span><textarea id="ann-msg" rows="3" maxlength="400" required></textarea></label>
-          <button class="btn" type="submit"><span data-i18n="post">Post</span></button>
-        </form>
+  <!-- =========================
+       ADMIN ANNOUNCEMENTS
+  ========================== -->
+
+  <div *ngIf="isAdmin">
+
+    <!-- HERO -->
+    <div class="announcement-hero admin-announcement-hero">
+
+      <div>
+
+        <span class="hero-badge">
+          ADMIN PANEL
+        </span>
+
+        <h1>
+          📢 Announcement Center
+        </h1>
+
+        <p>
+          Post important updates, events,
+          reminders, and notices for all students.
+        </p>
+
+        <div class="announcement-hero-actions">
+
+          <button
+            class="hero-ann-btn primary-ann-btn"
+            (click)="showAnnouncementForm = !showAnnouncementForm"
+          >
+            ➕ Create Announcement
+          </button>
+
+          <button
+            class="hero-ann-btn secondary-ann-btn"
+          >
+            📊 View Insights
+          </button>
+
+        </div>
+
       </div>
-    </section>
+
+      <div class="announcement-hero-icon">
+        📣
+      </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="announcement-stats-grid">
+
+      <div class="announcement-stat-card blue-ann">
+
+        <h2>24</h2>
+
+        <p>Total Posts</p>
+
+      </div>
+
+      <div class="announcement-stat-card purple-ann">
+
+        <h2>8</h2>
+
+        <p>Active Events</p>
+
+      </div>
+
+      <div class="announcement-stat-card green-ann">
+
+        <h2>320</h2>
+
+        <p>Students Reached</p>
+
+      </div>
+
+      <div class="announcement-stat-card orange-ann">
+
+        <h2>12</h2>
+
+        <p>Important Notices</p>
+
+      </div>
+
+    </div>
+
+    <!-- FORM -->
+    <div
+      class="announcement-form-card"
+      *ngIf="showAnnouncementForm"
+    >
+
+      <div class="announcement-form-header">
+
+        <h2>📝 New Announcement</h2>
+
+        <span>
+          Publish announcement to students
+        </span>
+
+      </div>
+
+      <form class="modern-announcement-form">
+
+        <div class="announcement-input-group">
+
+          <label>Title</label>
+
+          <input
+            type="text"
+            id="ann-title"
+            placeholder="Enter title..."
+          >
+
+        </div>
+
+        <div class="announcement-input-group">
+
+          <label>Category</label>
+
+          <select>
+
+            <option>Important</option>
+            <option>Event</option>
+            <option>Reminder</option>
+            <option>Emergency</option>
+
+          </select>
+
+        </div>
+
+        <div class="announcement-input-group">
+
+          <label>Message</label>
+
+          <textarea
+            rows="5"
+            id="ann-msg"
+            placeholder="Write announcement..."
+          ></textarea>
+
+        </div>
+
+        <div class="announcement-form-actions">
+
+          <button
+            type="button"
+            class="publish-btn"
+          >
+            🚀 Publish Now
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+    <!-- ANNOUNCEMENT LIST -->
+    <div class="announcement-feed">
+
+      <div class="announcement-card pinned-announcement">
+
+        <div class="announcement-top">
+
+          <div class="announcement-tag important-tag">
+            📌 PINNED
+          </div>
+
+          <span class="announcement-date">
+            Today • 9:30 AM
+          </span>
+
+        </div>
+
+        <h2>
+          Midterm Examination Schedule
+        </h2>
+
+        <p>
+          Please be informed that the library
+          will extend operating hours during
+          the midterm examination week.
+        </p>
+
+        <div class="announcement-footer">
+
+          <div class="announcement-author">
+            👨‍💼 Library Admin
+          </div>
+
+          <div class="announcement-actions">
+
+            <button>✏️ Edit</button>
+
+            <button>🗑 Delete</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="announcement-card">
+
+        <div class="announcement-top">
+
+          <div class="announcement-tag event-tag">
+            🎉 EVENT
+          </div>
+
+          <span class="announcement-date">
+            Yesterday
+          </span>
+
+        </div>
+
+        <h2>
+          Book Fair 2026
+        </h2>
+
+        <p>
+          Join the upcoming library book fair
+          and discover new educational resources.
+        </p>
+
+        <div class="announcement-footer">
+
+          <div class="announcement-author">
+            👩‍🏫 USTP Library
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       STUDENT ANNOUNCEMENTS
+  ========================== -->
+
+  <div *ngIf="!isAdmin">
+
+    <!-- HERO -->
+    <div class="student-announcement-hero">
+
+      <div>
+
+        <span class="student-ann-badge">
+          STUDENT UPDATES
+        </span>
+
+        <h1>
+          🔔 Latest Announcements
+        </h1>
+
+        <p>
+          Stay updated with library news,
+          activities, reminders, and events.
+        </p>
+
+      </div>
+
+      <div class="student-ann-icon">
+        🎓
+      </div>
+
+    </div>
+
+    <!-- QUICK FILTER -->
+    <div class="announcement-filter-bar">
+
+      <button class="filter-btn active-filter">
+        All
+      </button>
+
+      <button class="filter-btn">
+        Important
+      </button>
+
+      <button class="filter-btn">
+        Events
+      </button>
+
+      <button class="filter-btn">
+        Reminders
+      </button>
+
+    </div>
+
+    <!-- STUDENT FEED -->
+    <div class="student-announcement-feed">
+
+      <div class="student-announcement-card glow-ann-card">
+
+        <div class="student-ann-top">
+
+          <div class="student-ann-type important-student">
+            IMPORTANT
+          </div>
+
+          <span>
+            2 mins ago
+          </span>
+
+        </div>
+
+        <h2>
+          📚 Extended Library Hours
+        </h2>
+
+        <p>
+          The library will remain open until
+          9:00 PM starting next week for exams.
+        </p>
+
+        <div class="student-ann-footer">
+
+          <div>
+            👨‍💼 Posted by Admin
+          </div>
+
+          <button>
+            Read More
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="student-announcement-card">
+
+        <div class="student-ann-top">
+
+          <div class="student-ann-type event-student">
+            EVENT
+          </div>
+
+          <span>
+            Yesterday
+          </span>
+
+        </div>
+
+        <h2>
+          🎉 Book Fair Week
+        </h2>
+
+        <p>
+          Explore newly arrived books and
+          participate in exciting activities.
+        </p>
+
+        <div class="student-ann-footer">
+
+          <div>
+            📍 Main Library Hall
+          </div>
+
+          <button>
+            Join Event
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
     <section
   class="section page"
   *ngIf="activePage === 'messages'"
 >
 
-  <h3>✉️ Messages</h3>
+<div class="messages-layout">
 
-  <div class="messenger-container">
+  <!-- SIDEBAR -->
 
-    <div class="chat-header">
+  <div class="chat-sidebar">
 
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png"
+    <div class="chat-sidebar-top">
+
+      <h2>💬 Messages</h2>
+
+      <p>
+        {{
+          isAdmin
+          ? 'Admin Communication Center'
+          : 'Student Support Chat'
+        }}
+      </p>
+
+    </div>
+
+    <div
+      class="conversation-card"
+      *ngFor="let convo of conversations"
+      [class.active-convo]="selectedConversation.id === convo.id"
+      (click)="selectConversation(convo)"
+    >
+
+      <img [src]="convo.avatar">
+
+      <div class="conversation-info">
+
+        <h4>{{ convo.name }}</h4>
+
+        <small>{{ convo.role }}</small>
+
+      </div>
+
+      <div
+        class="online-dot"
+        *ngIf="convo.online"
+      ></div>
+
+      <span
+        class="unread-badge"
+        *ngIf="convo.unread > 0"
       >
+        {{ convo.unread }}
+      </span>
 
-      <div>
-        <h3>USTP Library Support</h3>
-        <span>Active now</span>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="message-actions">
+
+      <button class="action-btn">
+        📞 Call
+      </button>
+
+      <button class="action-btn">
+        📹 Meet
+      </button>
+
+      <button class="action-btn">
+        📢 Broadcast
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- MAIN CHAT -->
+
+  <div class="chat-main">
+
+    <!-- CHAT HEADER -->
+
+    <div class="chat-main-header">
+
+      <div class="chat-user">
+
+        <img
+          [src]="selectedConversation.avatar"
+        >
+
+        <div>
+
+          <h3>
+            {{ selectedConversation.name }}
+          </h3>
+
+          <span>
+            {{
+              selectedConversation.online
+              ? 'Online'
+              : 'Offline'
+            }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="chat-tools">
+
+        <button>🔍</button>
+        <button>📎</button>
+        <button>⚙️</button>
+
       </div>
 
     </div>
 
-    <div class="chat-body">
+    <!-- CHAT BODY -->
+
+    <div class="chat-body modern-chat">
 
       <div
         *ngFor="let msg of messages"
@@ -1302,41 +2591,625 @@
       >
 
         <div class="bubble">
+
           <p>{{ msg.text }}</p>
+
           <small>{{ msg.time }}</small>
+
         </div>
 
       </div>
 
     </div>
 
-    <div class="chat-input-area">
+    <!-- QUICK REPLIES -->
+
+    <div class="quick-replies">
+
+      <button
+        *ngFor="let reply of quickReplies"
+        (click)="sendQuickReply(reply)"
+      >
+        {{ reply }}
+      </button>
+
+    </div>
+
+    <!-- INPUT -->
+
+    <div class="chat-input-modern">
+
+      <label class="attach-btn">
+
+        📎
+
+        <input
+          type="file"
+          hidden
+          (change)="onFileSelected($event)"
+        >
+
+      </label>
 
       <input
         type="text"
         [(ngModel)]="newMessage"
-        placeholder="Type a message..."
+        placeholder="Type your message..."
         (keyup.enter)="sendMessage()"
       >
 
-      <button (click)="sendMessage()">
+      <button
+        class="send-btn"
+        (click)="sendMessage()"
+      >
         ➤
+      </button>
+
+    </div>
+
+    <small
+      *ngIf="selectedFileName"
+      class="selected-file"
+    >
+      Attached:
+      {{ selectedFileName }}
+    </small>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+
+  <div class="message-right-panel">
+
+    <!-- NOTIFICATIONS -->
+
+    <div class="message-card">
+
+      <h3>🔔 Notifications</h3>
+
+      <div
+        class="notif-item"
+        *ngFor="let notif of notifications"
+      >
+        {{ notif }}
+      </div>
+
+    </div>
+
+    <!-- ADMIN -->
+
+    <div
+      class="message-card"
+      *ngIf="isAdmin"
+    >
+
+      <h3>🛠 Admin Tools</h3>
+
+      <button class="panel-btn">
+        Manage Reports
+      </button>
+
+      <button class="panel-btn">
+        Archive Chats
+      </button>
+
+      <button class="panel-btn">
+        View Logs
+      </button>
+
+    </div>
+
+    <!-- STUDENT -->
+
+    <div
+      class="message-card"
+      *ngIf="!isAdmin"
+    >
+
+      <h3>🎫 Support Ticket</h3>
+
+      <input
+        type="text"
+        [(ngModel)]="ticketTitle"
+        placeholder="Issue Title"
+      >
+
+      <textarea
+        [(ngModel)]="ticketMessage"
+        placeholder="Describe your issue..."
+      ></textarea>
+
+      <button
+        class="ticket-btn"
+        (click)="createTicket()"
+      >
+        Submit Ticket
       </button>
 
     </div>
 
   </div>
 
+</div>
+
 </section>
+
     <section
-  class="section page"
+  class="section page contact-page"
   *ngIf="activePage === 'contact'"
 >
-      <h3>📞 <span data-i18n="contact">Contact Us</span></h3>
-      <p>Email: campuslibrary@example.edu</p>
-      <p>Phone: (000) 000-0000</p>
-      <p>Address: University Avenue</p>
-    </section>
+
+  <!-- =========================
+       ADMIN CONTACT PAGE
+  ========================== -->
+
+  <div *ngIf="isAdmin">
+
+    <!-- HERO -->
+    <div class="contact-hero admin-contact-hero">
+
+      <div>
+
+        <span class="contact-badge">
+          ADMIN COMMUNICATION
+        </span>
+
+        <h1>
+          📞 Contact Management Center
+        </h1>
+
+        <p>
+          Manage student concerns,
+          announcements, reports,
+          feedback, and communication channels.
+        </p>
+
+      </div>
+
+      <div class="contact-hero-icon">
+        🛡️
+      </div>
+
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="contact-stats-grid">
+
+      <div class="contact-stat-card blue-contact">
+
+        <h2>124</h2>
+
+        <p>Total Messages</p>
+
+      </div>
+
+      <div class="contact-stat-card purple-contact">
+
+        <h2>18</h2>
+
+        <p>Pending Concerns</p>
+
+      </div>
+
+      <div class="contact-stat-card green-contact">
+
+        <h2>89%</h2>
+
+        <p>Response Rate</p>
+
+      </div>
+
+      <div class="contact-stat-card orange-contact">
+
+        <h2>5</h2>
+
+        <p>Urgent Reports</p>
+
+      </div>
+
+    </div>
+
+    <!-- CONTACT GRID -->
+    <div class="contact-grid">
+
+      <!-- SUPPORT CENTER -->
+      <div class="contact-card large-contact-card">
+
+        <div class="contact-card-header">
+
+          <h2>
+            💬 Support Center
+          </h2>
+
+          <span>
+            Respond to students
+          </span>
+
+        </div>
+
+        <div class="admin-support-list">
+
+          <div class="support-message-item">
+
+            <div class="support-left">
+
+              <img
+                src="https://i.pravatar.cc/100?img=12"
+                class="support-avatar"
+              >
+
+              <div>
+
+                <h4>
+                  Maria Santos
+                </h4>
+
+                <p>
+                  Requesting overdue clarification
+                </p>
+
+              </div>
+
+            </div>
+
+            <button
+              class="reply-contact-btn"
+              (click)="openSupportChat('Maria Santos')"
+            >
+              💬 Reply
+            </button>
+
+          </div>
+
+          <div class="support-message-item">
+
+            <div class="support-left">
+
+              <img
+                src="https://i.pravatar.cc/100?img=15"
+                class="support-avatar"
+              >
+
+              <div>
+
+                <h4>
+                  Kevin Reyes
+                </h4>
+
+                <p>
+                  Asking about reservation status
+                </p>
+
+              </div>
+
+            </div>
+
+            <button
+              class="reply-contact-btn"
+              (click)="openSupportChat('Kevin Reyes')"
+            >
+              💬 Reply
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SYSTEM CHANNELS -->
+      <div class="contact-card">
+
+        <div class="contact-card-header">
+
+          <h2>
+            🌐 Communication Channels
+          </h2>
+
+          <span>
+            Connected platforms
+          </span>
+
+        </div>
+
+        <div class="channel-list">
+
+          <button class="channel-btn messenger-btn">
+            Messenger
+          </button>
+
+          <button class="channel-btn gmail-btn">
+            Gmail
+          </button>
+
+          <button class="channel-btn discord-btn">
+            Discord
+          </button>
+
+          <button class="channel-btn telegram-btn">
+            Telegram
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- SYSTEM UPDATES -->
+      <div class="contact-card">
+
+        <div class="contact-card-header">
+
+          <h2>
+            🚀 Upcoming Updates
+          </h2>
+
+          <span>
+            Planned system features
+          </span>
+
+        </div>
+
+        <div class="update-list">
+
+          <div class="update-item">
+
+            <div class="update-dot"></div>
+
+            <div>
+
+              <h4>
+                AI Recommendation System
+              </h4>
+
+              <p>
+                Coming this month
+              </p>
+
+            </div>
+
+          </div>
+
+          <div class="update-item">
+
+            <div class="update-dot"></div>
+
+            <div>
+
+              <h4>
+                QR Attendance Tracking
+              </h4>
+
+              <p>
+                Beta testing soon
+              </p>
+
+            </div>
+
+          </div>
+
+          <div class="update-item">
+
+            <div class="update-dot"></div>
+
+            <div>
+
+              <h4>
+                Mobile App Integration
+              </h4>
+
+              <p>
+                Planned next update
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       STUDENT CONTACT PAGE
+  ========================== -->
+
+  <div *ngIf="!isAdmin">
+
+    <!-- HERO -->
+    <div class="contact-hero student-contact-hero">
+
+      <div>
+
+        <span class="contact-badge">
+          STUDENT SUPPORT
+        </span>
+
+        <h1>
+          📬 Contact & Help Center
+        </h1>
+
+        <p>
+          Reach library staff,
+          submit concerns,
+          ask questions,
+          and stay updated.
+        </p>
+
+      </div>
+
+      <div class="contact-hero-icon">
+        🎓
+      </div>
+
+    </div>
+
+    <!-- CONTACT GRID -->
+    <div class="contact-grid">
+
+      <!-- SEND MESSAGE -->
+      <div class="contact-card large-contact-card">
+
+        <div class="contact-card-header">
+
+          <h2>
+            ✉ Send Message
+          </h2>
+
+          <span>
+            Contact library administration
+          </span>
+
+        </div>
+
+        <form class="modern-contact-form">
+
+          <div class="contact-input-group">
+
+            <label>
+              Subject
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="contactSubject"
+              name="contactSubject"
+              placeholder="Enter concern subject..."
+            >
+
+          </div>
+
+          <div class="contact-input-group">
+
+            <label>
+              Message
+            </label>
+
+            <textarea
+              rows="6"
+              [(ngModel)]="contactMessage"
+              name="contactMessage"
+              placeholder="Write your message..."
+            ></textarea>
+
+          </div>
+
+          <button
+            type="button"
+            class="send-contact-btn"
+            (click)="sendContactMessage()"
+          >
+            🚀 Send Message
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- QUICK CONTACT -->
+      <div class="contact-card">
+
+        <div class="contact-card-header">
+
+          <h2>
+            📱 Quick Contact
+          </h2>
+
+          <span>
+            Reach us instantly
+          </span>
+
+        </div>
+
+        <div class="quick-contact-list">
+
+          <button
+            class="quick-contact-btn messenger-btn"
+          >
+            Messenger Chat
+          </button>
+
+          <button
+            class="quick-contact-btn gmail-btn"
+          >
+            Send Email
+          </button>
+
+          <button
+            class="quick-contact-btn discord-btn"
+          >
+            Join Discord
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- UPCOMING -->
+      <div class="contact-card">
+
+        <div class="contact-card-header">
+
+          <h2>
+            🔥 What's New
+          </h2>
+
+          <span>
+            Latest updates
+          </span>
+
+        </div>
+
+        <div class="student-updates-list">
+
+          <div class="student-update-item">
+
+            <h4>
+              📚 New Book Recommendation AI
+            </h4>
+
+            <p>
+              Personalized suggestions soon.
+            </p>
+
+          </div>
+
+          <div class="student-update-item">
+
+            <h4>
+              📱 Mobile Friendly Dashboard
+            </h4>
+
+            <p>
+              Better experience on phones.
+            </p>
+
+          </div>
+
+          <div class="student-update-item">
+
+            <h4>
+              🎯 Smart Reservation Feature
+            </h4>
+
+            <p>
+              Easier book reservations soon.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
     <footer>
       &copy; <span id="copyright-year"></span> USTP Metro Library.
