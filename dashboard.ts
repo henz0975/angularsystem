@@ -20,6 +20,38 @@ import { BorrowService } from '../../services/borrow.service';
 
 export class Dashboard implements OnInit {
 
+  users:any[] = [
+  {
+    fullName: 'Juan Dela Cruz',
+    role: 'Student',
+    studentId: '2026-0001',
+    sex: 'Male',
+    city: 'Bukidnon',
+    profileImage: ''
+  },
+
+  {
+    fullName: 'Maria Santos',
+    role: 'Student',
+    studentId: '2026-0002',
+    sex: 'Female',
+    city: 'Cagayan de Oro',
+    profileImage: ''
+  },
+
+  {
+    fullName: 'Kevin Reyes',
+    role: 'Student',
+    studentId: '2026-0003',
+    sex: 'Male',
+    city: 'Valencia',
+    profileImage: ''
+  }
+];
+  contactSubject = '';
+  contactMessage = '';
+  userSearch = '';
+  showAnnouncementForm = false;
   showBorrowModal = false;
 
 borrowSearch = '';
@@ -28,6 +60,75 @@ totalFines = 0;
 
 overdueCount = 0;
 
+get totalUsers(){
+
+  return this.users.length;
+
+}
+
+viewUser(user:any){
+  alert('Viewing profile of ' + user.fullName);
+}
+
+messageUser(user:any){
+  this.activePage = 'messages';
+  this.newMessage =
+  'Hello ' + user.fullName + '!';
+}
+
+removeUser(user:any){
+
+  this.users =
+  this.users.filter(
+    (u:any) => u !== user
+  );
+
+}
+// =========================
+// MESSAGE SYSTEM
+// =========================
+
+conversations = [
+  {
+    id: 1,
+    name: 'Library Support',
+    role: 'Support Team',
+    avatar: 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png',
+    unread: 2,
+    online: true
+  },
+
+  {
+    id: 2,
+    name: 'Admin Office',
+    role: 'Administrator',
+    avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+    unread: 0,
+    online: false
+  }
+];
+
+selectedConversation = this.conversations[0];
+
+notifications = [
+  '📚 New books added',
+  '⏰ Borrow due tomorrow',
+  '📢 New announcement posted'
+];
+
+quickReplies = [
+  'Hello!',
+  'Thank you!',
+  'Can I borrow this book?',
+  'I need assistance.'
+];
+
+ticketTitle = '';
+ticketMessage = '';
+
+tickets: any[] = [];
+
+selectedFileName = '';
 messages = [
   {
     text: 'Hello! Welcome to USTP Library.',
@@ -40,7 +141,6 @@ newMessage = '';
 
   borrowedBooks: any[] = [];
 
-totalUsers = 0;
 chart: any;
 showLoader = true;
 currentUser: any = null;
@@ -163,8 +263,6 @@ previewImage = '';
   localStorage.getItem('users') || '[]'
 );
 
-this.totalUsers = users.length;
-  
   this.selectedUser = this.currentUser;
 
   const savedBooks =
@@ -690,6 +788,59 @@ sendMessage(){
   }
 
 }
+selectConversation(convo: any) {
+
+  this.selectedConversation = convo;
+
+  convo.unread = 0;
+
+}
+
+sendQuickReply(text: string) {
+
+  this.newMessage = text;
+
+  this.sendMessage();
+
+}
+
+createTicket() {
+
+  if (!this.ticketTitle || !this.ticketMessage) {
+
+    alert('Complete fields');
+
+    return;
+
+  }
+
+  this.tickets.push({
+
+    title: this.ticketTitle,
+    message: this.ticketMessage,
+    status: 'Pending',
+    date: new Date()
+
+  });
+
+  this.ticketTitle = '';
+  this.ticketMessage = '';
+
+  alert('Ticket Submitted');
+
+}
+
+onFileSelected(event: any) {
+
+  const file = event.target.files[0];
+
+  if (file) {
+
+    this.selectedFileName = file.name;
+
+  }
+
+}
 onBookImageSelected(event: any) {
 
   const file = event.target.files[0];
@@ -740,6 +891,36 @@ openBookModal(book: any) {
 closeBookModal() {
 
   this.showBookModal = false;
+
+}
+sendContactMessage(){
+
+  if(
+    !this.contactSubject ||
+    !this.contactMessage
+  ){
+
+    alert('Please complete the form.');
+
+    return;
+
+  }
+
+  alert(
+    'Message sent successfully!'
+  );
+
+  this.contactSubject = '';
+  this.contactMessage = '';
+
+}
+
+openSupportChat(name:string){
+
+  this.activePage = 'messages';
+
+  this.newMessage =
+  'Replying to ' + name;
 
 }
 }
