@@ -1,0 +1,368 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  overflow:hidden;
+}
+
+.register-page{
+  width:100%;
+  height:100vh;
+
+  display:flex;
+
+  background:url('/library-bg.jpg');
+  background-size:cover;
+  background-position:center;
+}
+
+.left-panel{
+  width:45%;
+  position:relative;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(2px);
+}
+
+.brand-box{
+  position:relative;
+  z-index:2;
+
+  text-align:center;
+  color:white;
+}
+
+.logo-icon{
+  font-size:55px;
+  margin-bottom:10px;
+}
+
+.brand-box h1{
+  font-size:70px;
+  font-weight:900;
+}
+
+.white{
+  color:white;
+}
+
+.yellow{
+  color:#ffc928;
+}
+
+.brand-box p{
+  margin-top:10px;
+  font-size:24px;
+}
+
+.register-container{
+  width:55%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:30px;
+}
+
+.register-card{
+
+  width:100%;
+  max-width:700px;
+
+  height:90vh;
+  overflow-y:auto;
+
+  padding:40px;
+
+  border-radius:30px;
+
+  background:rgba(255,255,255,0.18);
+
+  backdrop-filter:blur(20px);
+
+  box-shadow:0 10px 40px rgba(0,0,0,0.3);
+}
+
+.register-card h1{
+  text-align:center;
+
+  font-size:55px;
+
+  color:#003b8e;
+
+  margin-bottom:10px;
+}
+
+.register-card h2{
+  text-align:center;
+
+  font-size:35px;
+
+  margin-bottom:30px;
+}
+
+.grid{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:20px;
+}
+
+.form-group,
+.full-group{
+  display:flex;
+  flex-direction:column;
+
+  margin-bottom:20px;
+}
+
+label{
+  font-size:22px;
+
+  margin-bottom:10px;
+
+  text-align:center;
+}
+
+input,
+textarea,
+select{
+
+  width:100%;
+
+  padding:18px;
+
+  border:none;
+
+  border-radius:15px;
+
+  font-size:18px;
+
+  background:#eef3ff;
+}
+
+textarea{
+  min-height:120px;
+  resize:none;
+}
+
+button{
+
+  width:100%;
+
+  padding:18px;
+
+  border:none;
+
+  border-radius:15px;
+
+  background:#ffc928;
+
+  color:#002b73;
+
+  font-size:25px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  margin-top:15px;
+
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.03);
+}
+
+.login-link{
+  text-align:center;
+
+  margin-top:20px;
+
+  font-size:18px;
+}
+
+.login-link a{
+  color:#4b00d1;
+  font-weight:bold;
+}
+
+.register-card::-webkit-scrollbar{
+  width:8px;
+}
+
+.register-card::-webkit-scrollbar-thumb{
+  background:#ffc928;
+  border-radius:20px;
+}
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.register-page {
+
+  width: 100%;
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.45),
+      rgba(0,0,0,0.45)
+    ),
+    url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1974&auto=format&fit=crop')
+    no-repeat center center/cover;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+  box-sizing: border-box;
+
+}
+
+.register-card {
+
+    animation: popup 0.5s ease;
+
+  width: 100%;
+  max-width: 850px;
+
+  backdrop-filter: blur(18px);
+
+  background: rgba(255,255,255,0.12);
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  border-radius: 30px;
+
+  padding: 40px;
+
+  color: white;
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.4);
+
+}
+
+.register-card input,
+.register-card textarea,
+.register-card select {
+
+  width: 100%;
+
+  padding: 15px;
+
+  border-radius: 14px;
+
+  border: none;
+
+  outline: none;
+
+  margin-top: 8px;
+
+  margin-bottom: 20px;
+
+  font-size: 15px;
+
+  box-sizing: border-box;
+
+  color: #111;
+  background: rgba(255,255,255,0.92);
+}
+
+.register-card button {
+
+  width: 100%;
+
+  padding: 16px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: #f7c52b;
+
+  color: #111;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.register-card button:hover {
+
+  transform: scale(1.02);
+
+}
+
+.register-card input::placeholder,
+.register-card textarea::placeholder {
+
+  color: #666;
+
+}
+
+@keyframes popup {
+
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+.admin-box {
+
+  margin-top: 15px;
+
+  animation: fadeIn 0.4s ease;
+
+}
+
+@keyframes fadeIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}

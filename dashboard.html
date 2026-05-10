@@ -1,0 +1,1558 @@
+<h1>Dashboard Works 🎉</h1>
+<button (click)="logout()">Logout</button>
+  <button class="menu-toggle" (click)="toggleMenu()">
+  ☰
+</button>
+
+  <aside
+  [class.active]="sidebarOpen"
+  aria-label="Main sidebar"
+>
+    <div class="sidebar-top">
+      <h1 class="brand">USTP <span>Library</span></h1>
+      <div
+  class="sidebar-profile"
+  (click)="openProfile()"
+>
+
+  <img
+
+    [src]="
+      currentUser?.profileImage ||
+      defaultAvatar(currentUser?.sex)
+    "
+
+    class="sidebar-avatar"
+  >
+
+  <div>
+
+    <h4>{{ currentUser?.fullName }}</h4>
+
+    <p>{{ currentUser?.role }}</p>
+
+  </div>
+
+</div>
+    </div>
+
+    <nav>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'home'"
+    (click)="changePage('home')"
+  >
+    🏠 <span>Home</span>
+  </a>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'dashboard'"
+    (click)="changePage('dashboard')"
+  >
+    📊 <span>Dashboard</span>
+  </a>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'catalog'"
+    (click)="changePage('catalog')"
+  >
+    📚 <span>Catalog</span>
+  </a>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'borrowed'"
+    (click)="changePage('borrowed')"
+  >
+    🧾 <span>Borrowed</span>
+  </a>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'find-users'"
+    (click)="changePage('find-users')"
+  >
+    🔎 <span>Find Users</span>
+  </a>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'settings'"
+    (click)="changePage('settings')"
+  >
+    ⚙️ <span>Settings</span>
+  </a>
+
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'announcements'"
+    (click)="changePage('announcements')"
+  >
+    📢 <span>Announcements</span>
+  </a>
+<a
+  class="nav-link"
+  [class.active]="activePage === 'messages'"
+  (click)="changePage('messages')"
+>
+  💬 <span>Messages</span>
+</a>
+  <a
+    class="nav-link"
+    [class.active]="activePage === 'contact'"
+    (click)="changePage('contact')"
+  >
+    📞 <span>Contact</span>
+  </a>
+
+</nav>
+    <div class="sidebar-footer">
+      <div class="muted small">Theme</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <label class="switch">
+
+  <input
+    type="checkbox"
+    id="theme-toggle"
+    (change)="toggleTheme()"
+  >
+
+  <span></span>
+
+</label>
+        <button class="btn small" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+<!-- HOME PAGE -->
+<section
+  class="section page home-page"
+  *ngIf="activePage === 'home'"
+>
+
+  <!-- HERO -->
+  <div class="hero-section">
+
+    <div class="hero-left">
+
+      <h1>
+        Welcome back,
+        {{ currentUser?.fullName }} 👋
+      </h1>
+
+      <p>
+        USTP Smart Library Management System
+      </p>
+
+      <div class="hero-buttons">
+
+        <button
+          class="hero-btn primary"
+          (click)="changePage('catalog')"
+        >
+          Browse Books
+        </button>
+
+        <button
+          class="hero-btn secondary"
+          (click)="changePage('dashboard')"
+        >
+          Open Dashboard
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="hero-right">
+
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
+      >
+
+    </div>
+
+  </div>
+
+  <!-- ADMIN PAGE -->
+  <div *ngIf="isAdmin">
+
+    <div class="section-title">
+      📊 Admin Control Center
+    </div>
+
+    <div class="home-grid">
+
+      <div class="glass-card glow-blue">
+
+        <h3>📚 Total Books</h3>
+
+        <h1>{{ books.length }}</h1>
+
+        <p>
+          Manage all library books
+        </p>
+
+      </div>
+
+      <div class="glass-card glow-purple">
+
+        <h3>🧾 Borrowed Books</h3>
+
+        <h1>{{ borrowedBooks.length }}</h1>
+
+        <p>
+          Current active borrow records
+        </p>
+
+      </div>
+
+      <div class="glass-card glow-green">
+
+        <h3>👥 Users</h3>
+
+        <h1>{{ totalUsers }}</h1>
+
+        <p>
+          Registered student accounts
+        </p>
+
+      </div>
+
+      <div class="glass-card glow-orange">
+
+        <h3>⚠️ Overdue</h3>
+
+        <h1>
+          {{
+            borrowedBooks.filter(
+              b => isOverdue(b.dueDate)
+            ).length
+          }}
+        </h1>
+
+        <p>
+          Borrowers with penalties
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="action-panel">
+
+      <h2>⚡ Quick Actions</h2>
+
+      <div class="action-buttons">
+
+        <button
+          class="action-btn"
+          (click)="changePage('catalog')"
+        >
+          📚 Manage Books
+        </button>
+
+        <button
+          class="action-btn"
+          (click)="changePage('borrowed')"
+        >
+          🧾 Borrow Records
+        </button>
+
+        <button
+          class="action-btn"
+          (click)="changePage('announcements')"
+        >
+          📢 Announcements
+        </button>
+
+        <button
+          class="action-btn"
+          (click)="changePage('messages')"
+        >
+          💬 Messages
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- STUDENT PAGE -->
+  <div *ngIf="!isAdmin">
+
+    <div class="section-title">
+      🎓 Student Dashboard
+    </div>
+
+    <div class="home-grid">
+
+      <div class="glass-card glow-blue">
+
+        <h3>📚 Available Books</h3>
+
+        <h1>
+          {{
+            books.filter(
+              b => b.available
+            ).length
+          }}
+        </h1>
+
+        <p>
+          Ready for borrowing
+        </p>
+
+      </div>
+
+      <div class="glass-card glow-pink">
+
+        <h3>🧾 Borrowed</h3>
+
+        <h1>{{ borrowedBooks.length }}</h1>
+
+        <p>
+          Books currently borrowed
+        </p>
+
+      </div>
+
+      <div class="glass-card glow-green">
+
+        <h3>⭐ Recommended</h3>
+
+        <h1>12</h1>
+
+        <p>
+          Top picked books today
+        </p>
+
+      </div>
+
+      <div class="glass-card glow-orange">
+
+        <h3>⏰ Due Soon</h3>
+
+        <h1>
+          {{
+            borrowedBooks.length > 0
+            ? borrowedBooks.length
+            : 0
+          }}
+        </h1>
+
+        <p>
+          Return before due date
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- RECENT BOOKS -->
+    <div class="recent-books">
+
+      <h2>🔥 Popular Books</h2>
+
+      <div class="recent-grid">
+
+        <div
+          class="recent-card"
+          *ngFor="let book of books.slice(0,4)"
+        >
+
+          <img [src]="book.image">
+
+          <h4>{{ book.title }}</h4>
+
+          <p>{{ book.author }}</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+    <section
+  class="section page dashboard-page"
+  *ngIf="activePage === 'dashboard'"
+>
+
+  <!-- ADMIN DASHBOARD -->
+  <div *ngIf="isAdmin">
+
+    <!-- HERO -->
+    <div class="dashboard-hero admin-hero">
+
+      <div>
+        <h1>
+          📊 Admin Control Center
+        </h1>
+
+        <p>
+          Manage books, monitor borrowing activity,
+          and oversee the entire library system.
+        </p>
+
+        <div class="hero-buttons">
+
+          <button
+            class="hero-btn primary-btn"
+            (click)="changePage('catalog')"
+          >
+            📚 Manage Books
+          </button>
+
+          <button
+            class="hero-btn secondary-btn"
+            (click)="changePage('borrowed')"
+          >
+            🧾 Borrow Records
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="hero-icon">
+        🏛️
+      </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="dashboard-grid">
+
+      <div class="dashboard-card glow-blue">
+        <span>📚</span>
+        <h2>{{ books.length }}</h2>
+        <p>Total Books</p>
+      </div>
+
+      <div class="dashboard-card glow-green">
+        <span>📥</span>
+        <h2>{{ borrowedBooks.length }}</h2>
+        <p>Borrowed Books</p>
+      </div>
+
+      <div class="dashboard-card glow-purple">
+        <span>👥</span>
+        <h2>{{ totalUsers }}</h2>
+        <p>Registered Users</p>
+      </div>
+
+      <div class="dashboard-card glow-orange">
+        <span>⚠️</span>
+        <h2>
+          {{
+            borrowedBooks.filter(
+              b => isOverdue(b.dueDate)
+            ).length
+          }}
+        </h2>
+        <p>Overdue Books</p>
+      </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="dashboard-box">
+
+      <div class="dashboard-box-header">
+
+        <h3>📈 Library Analytics</h3>
+
+        <span>Live Statistics</span>
+
+      </div>
+
+      <canvas
+        id="libraryChart"
+        *ngIf="isAdmin"
+      ></canvas>
+
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="dashboard-box">
+
+      <div class="dashboard-box-header">
+
+        <h3>🕒 Recent Borrowers</h3>
+
+      </div>
+
+      <div
+        class="activity-item"
+        *ngFor="
+          let borrowed of borrowedBooks.slice(0,5)
+        "
+      >
+
+        <div class="activity-avatar">
+          👤
+        </div>
+
+        <div>
+
+          <h4>{{ borrowed.borrower }}</h4>
+
+          <p>
+            Borrowed
+            <strong>{{ borrowed.book }}</strong>
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- STUDENT DASHBOARD -->
+  <div *ngIf="!isAdmin">
+
+    <!-- HERO -->
+    <div class="dashboard-hero student-hero">
+
+      <div>
+
+        <h1>
+          👋 Welcome,
+          {{ currentUser?.fullName }}
+        </h1>
+
+        <p>
+          Discover books, manage your borrowings,
+          and explore the digital library.
+        </p>
+
+        <div class="hero-buttons">
+
+          <button
+            class="hero-btn primary-btn"
+            (click)="changePage('catalog')"
+          >
+            🔎 Explore Books
+          </button>
+
+          <button
+            class="hero-btn secondary-btn"
+            (click)="changePage('borrowed')"
+          >
+            📚 My Borrowings
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="hero-icon">
+        🎓
+      </div>
+
+    </div>
+
+    <!-- STUDENT STATS -->
+    <div class="dashboard-grid">
+
+      <div class="dashboard-card glow-blue">
+        <span>📚</span>
+        <h2>
+          {{
+            books.filter(
+              b => b.available
+            ).length
+          }}
+        </h2>
+        <p>Available Books</p>
+      </div>
+
+      <div class="dashboard-card glow-green">
+        <span>🧾</span>
+        <h2>{{ borrowedBooks.length }}</h2>
+        <p>Borrowed Books</p>
+      </div>
+
+      <div class="dashboard-card glow-purple">
+        <span>⭐</span>
+        <h2>24/7</h2>
+        <p>Library Access</p>
+      </div>
+
+      <div class="dashboard-card glow-orange">
+        <span>🔥</span>
+        <h2>Top</h2>
+        <p>Learning Experience</p>
+      </div>
+
+    </div>
+
+    <!-- PROFILE -->
+    <div class="dashboard-box profile-box">
+
+      <div class="profile-left">
+
+        <img
+          [src]="
+            currentUser?.profileImage ||
+            defaultAvatar(currentUser?.sex)
+          "
+          class="dashboard-profile-img"
+        >
+
+      </div>
+
+      <div class="profile-right">
+
+        <h2>{{ currentUser?.fullName }}</h2>
+
+        <p>
+          {{ currentUser?.role }}
+        </p>
+
+        <div class="profile-details">
+
+          <div>
+            <strong>Username</strong>
+            <span>{{ currentUser?.username }}</span>
+          </div>
+
+          <div>
+            <strong>Student ID</strong>
+            <span>{{ currentUser?.studentId }}</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RECOMMENDED -->
+    <div class="dashboard-box">
+
+      <div class="dashboard-box-header">
+
+        <h3>✨ Recommended Books</h3>
+
+      </div>
+
+      <div class="recommend-grid">
+
+        <div
+          class="recommend-card"
+          *ngFor="
+            let book of books.slice(0,4)
+          "
+        >
+
+          <img
+            [src]="book.image"
+          >
+
+          <h4>{{ book.title }}</h4>
+
+          <p>{{ book.author }}</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+    <section
+  class="section page catalog-page"
+  *ngIf="activePage === 'catalog'"
+>
+
+  <!-- HEADER -->
+  <div
+    class="catalog-hero"
+    [class.admin-mode]="isAdmin"
+  >
+
+    <div>
+
+      <h1>
+        {{
+          isAdmin
+          ? '📚 Library Management'
+          : '📖 Explore Books'
+        }}
+      </h1>
+
+      <p>
+
+        {{
+          isAdmin
+          ? 'Manage and organize the entire library collection.'
+          : 'Discover books and build your learning journey.'
+        }}
+
+      </p>
+
+    </div>
+
+    <button
+      *ngIf="isAdmin"
+      class="add-book-btn"
+      (click)="showAddBookModal=true"
+    >
+      ➕ Add Book
+    </button>
+
+  </div>
+
+  <!-- FILTERS -->
+  <div class="catalog-controls">
+
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      placeholder="Search books..."
+    >
+
+    <select
+      [(ngModel)]="selectedCategory"
+    >
+
+      <option value="All">
+        All Categories
+      </option>
+
+      <option value="Programming">
+        Programming
+      </option>
+
+      <option value="Science">
+        Science
+      </option>
+
+      <option value="Math">
+        Math
+      </option>
+
+      <option value="History">
+        History
+      </option>
+
+    </select>
+
+  </div>
+
+  <!-- ANALYTICS -->
+  <div
+    class="catalog-stats"
+    *ngIf="isAdmin"
+  >
+
+    <div class="catalog-stat-card">
+      <h2>{{ books.length }}</h2>
+      <p>Total Books</p>
+    </div>
+
+    <div class="catalog-stat-card">
+      <h2>
+        {{
+          books.filter(
+            b => b.available
+          ).length
+        }}
+      </h2>
+      <p>Available</p>
+    </div>
+
+    <div class="catalog-stat-card">
+      <h2>
+        {{
+          books.filter(
+            b => !b.available
+          ).length
+        }}
+      </h2>
+      <p>Borrowed</p>
+    </div>
+
+  </div>
+
+  <!-- BOOK GRID -->
+  <div class="modern-book-grid">
+
+    <div
+      class="modern-book-card"
+      *ngFor="
+        let book of filteredBooks;
+        let i = index
+      "
+    >
+
+      <div class="book-image-wrap">
+
+        <img
+          [src]="book.image"
+        >
+
+        <button
+          class="favorite-btn"
+          *ngIf="!isAdmin"
+          (click)="toggleFavorite(book)"
+        >
+
+          {{
+            favorites.includes(book.title)
+            ? '❤️'
+            : '🤍'
+          }}
+
+        </button>
+
+      </div>
+
+      <div class="book-content">
+
+        <span class="book-category">
+          {{ book.category }}
+        </span>
+
+        <h3>{{ book.title }}</h3>
+
+        <p>{{ book.author }}</p>
+
+        <div class="book-status">
+
+          <span
+            [class.available]="book.available"
+            [class.borrowed]="!book.available"
+          >
+
+            {{
+              book.available
+              ? 'Available'
+              : 'Borrowed'
+            }}
+
+          </span>
+
+        </div>
+
+        <div class="book-actions">
+
+          <button
+            class="view-btn"
+            (click)="openBookModal(book)"
+          >
+            View
+          </button>
+
+          <button
+            *ngIf="isAdmin"
+            class="delete-btn"
+            (click)="deleteBook(i)"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+    <section
+  class="section page borrowed-page"
+  *ngIf="activePage === 'borrowed'"
+>
+
+  <!-- =========================
+       ADMIN BORROWED PAGE
+  ========================== -->
+  <div *ngIf="isAdmin">
+
+    <!-- HERO -->
+    <div class="borrow-hero admin-hero">
+
+      <div>
+        <h1>📚 Library Borrow Center</h1>
+        <p>
+          Monitor borrow activity,
+          overdue books, fines,
+          and student records.
+        </p>
+      </div>
+
+      <button
+        class="btn glow-btn"
+        (click)="showBorrowModal = true"
+      >
+        + New Borrow
+      </button>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+
+      <div class="stat-card modern-card">
+        <h2>{{ borrowedBooks.length }}</h2>
+        <p>Total Borrowed</p>
+      </div>
+
+      <div class="stat-card modern-card overdue-card">
+        <h2>{{ overdueCount }}</h2>
+        <p>Overdue</p>
+      </div>
+
+      <div class="stat-card modern-card">
+        <h2>₱{{ totalFines }}</h2>
+        <p>Total Fines</p>
+      </div>
+
+      <div class="stat-card modern-card">
+        <h2>{{ totalUsers }}</h2>
+        <p>Students</p>
+      </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="card chart-card">
+
+      <h3>📊 Borrow Analytics</h3>
+
+      <canvas id="borrowChart"></canvas>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card">
+
+      <input
+        type="text"
+        [(ngModel)]="borrowSearch"
+        placeholder="Search student or book..."
+      >
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="borrow-table card">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Student</th>
+            <th>Book</th>
+            <th>Due</th>
+            <th>Status</th>
+            <th>Fine</th>
+            <th>Action</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let borrowed of filteredBorrowedBooks;
+              let i = index
+            "
+          >
+
+            <td>{{ borrowed.borrower }}</td>
+
+            <td>{{ borrowed.book }}</td>
+
+            <td>
+              {{
+                borrowed.dueDate
+                | date:'mediumDate'
+              }}
+            </td>
+
+            <td>
+
+              <span
+                class="status"
+                [class.overdue]="
+                  isOverdue(borrowed.dueDate)
+                "
+              >
+
+                {{
+                  isOverdue(borrowed.dueDate)
+                  ? 'Overdue'
+                  : 'Active'
+                }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              ₱{{
+                calculateFine(
+                  borrowed.dueDate
+                )
+              }}
+
+            </td>
+
+            <td>
+
+              <button
+                class="btn"
+                (click)="returnBook(i)"
+              >
+                Return
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- TOP READERS -->
+    <div class="card">
+
+      <h3>🏆 Top Readers</h3>
+
+      <div class="top-readers">
+
+        <div class="reader-card">
+          🥇 John — 24 Books
+        </div>
+
+        <div class="reader-card">
+          🥈 Anna — 20 Books
+        </div>
+
+        <div class="reader-card">
+          🥉 Carl — 17 Books
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       STUDENT BORROWED PAGE
+  ========================== -->
+  <div *ngIf="!isAdmin">
+
+    <!-- HERO -->
+    <div class="borrow-hero student-hero">
+
+      <div>
+
+        <h1>
+          📖 My Library
+        </h1>
+
+        <p>
+          Track your borrowed books,
+          due dates, and reading journey.
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- STUDENT STATS -->
+    <div class="stats-grid">
+
+      <div class="stat-card modern-card">
+        <h2>{{ borrowedBooks.length }}</h2>
+        <p>Borrowed</p>
+      </div>
+
+      <div class="stat-card modern-card">
+        <h2>{{ overdueCount }}</h2>
+        <p>Due Soon</p>
+      </div>
+
+      <div class="stat-card modern-card">
+        <h2>12</h2>
+        <p>Achievements</p>
+      </div>
+
+    </div>
+
+    <!-- CURRENT BOOKS -->
+    <div class="student-books">
+
+      <div
+        class="student-book-card"
+        *ngFor="
+          let borrowed of borrowedBooks
+        "
+      >
+
+        <h3>{{ borrowed.book }}</h3>
+
+        <p>
+          Due:
+          {{
+            borrowed.dueDate
+            | date:'mediumDate'
+          }}
+        </p>
+
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+
+        <button
+          class="btn"
+          (click)="returnBook(0)"
+        >
+          Return
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="card">
+
+      <h3>📅 Reading Timeline</h3>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+          📘 Borrowed Harry Potter
+        </div>
+
+        <div class="timeline-item">
+          📗 Returned Hobbit
+        </div>
+
+        <div class="timeline-item">
+          📙 Borrowed AI Basics
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+    <section
+  class="section page"
+  *ngIf="activePage === 'find-users'"
+>
+      <h3>🔎 <span data-i18n="find_users">Find User Profile</span></h3>
+      <input id="user-search" placeholder="Search name, username, or ID..." />
+      <div id="user-results" class="user-results"></div>
+    </section>
+
+    <section
+  class="section page"
+  *ngIf="activePage === 'settings'"
+>
+      <h3>⚙️ <span data-i18n="settings">Settings</span></h3>
+      <div class="card">
+        <h4><span data-i18n="appearance">Appearance</span></h4>
+        <div style="display:flex;gap:10px;align-items:center">
+          <label class="muted small" data-i18n="accent">Accent</label>
+          <div style="display:flex;gap:8px">
+
+  <button
+    class="accent-btn"
+    data-accent="#FFC72C"
+    (click)="setAccent('#FFC72C')"
+    title="USTP Gold"
+  ></button>
+
+  <button
+    class="accent-btn"
+    data-accent="#1DB7C8"
+    (click)="setAccent('#1DB7C8')"
+    title="Teal"
+  ></button>
+
+  <button
+    class="accent-btn"
+    data-accent="#7C4DFF"
+    (click)="setAccent('#7C4DFF')"
+    title="Purple"
+  ></button>
+
+  <button
+    class="accent-btn"
+    data-accent="#FF6B6B"
+    (click)="setAccent('#FF6B6B')"
+    title="Red"
+  ></button>
+
+</div>
+        </div>
+
+        <hr/>
+
+        <h4><span data-i18n="language">Language</span></h4>
+        <select
+  id="language-select"
+  (change)="setLanguage($any($event.target).value)"
+>
+          <option value="en">English</option>
+          <option value="tl">Tagalog</option>
+          <option value="ceb">Bisaya</option>
+        </select>
+
+        <hr/>
+
+        <h4><span data-i18n="account">Account</span></h4>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button
+  class="btn"
+  (click)="resetDemo()"
+>
+  Reset Demo Data
+</button>
+
+<button
+  class="btn"
+  (click)="exportAllData()"
+>
+  Export Data
+</button>
+        </div>
+      </div>
+    </section>
+
+    <section
+  class="section page"
+  *ngIf="activePage === 'announcements'"
+>
+      <h3>📢 <span data-i18n="announcements">Announcements</span></h3>
+      <div id="ann-list"></div>
+
+      <div id="admin-ann-form" style="display:none;margin-top:12px" class="card">
+        <h4><span data-i18n="post_ann">Post Announcement (Admin)</span></h4>
+        <form id="post-ann-form">
+          <label><span data-i18n="title">Title</span><input type="text" id="ann-title" maxlength="80" required /></label>
+          <label><span data-i18n="message">Message</span><textarea id="ann-msg" rows="3" maxlength="400" required></textarea></label>
+          <button class="btn" type="submit"><span data-i18n="post">Post</span></button>
+        </form>
+      </div>
+    </section>
+
+    <section
+  class="section page"
+  *ngIf="activePage === 'messages'"
+>
+
+  <h3>✉️ Messages</h3>
+
+  <div class="messenger-container">
+
+    <div class="chat-header">
+
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png"
+      >
+
+      <div>
+        <h3>USTP Library Support</h3>
+        <span>Active now</span>
+      </div>
+
+    </div>
+
+    <div class="chat-body">
+
+      <div
+        *ngFor="let msg of messages"
+        class="chat-message"
+        [class.mine]="msg.mine"
+      >
+
+        <div class="bubble">
+          <p>{{ msg.text }}</p>
+          <small>{{ msg.time }}</small>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="chat-input-area">
+
+      <input
+        type="text"
+        [(ngModel)]="newMessage"
+        placeholder="Type a message..."
+        (keyup.enter)="sendMessage()"
+      >
+
+      <button (click)="sendMessage()">
+        ➤
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+    <section
+  class="section page"
+  *ngIf="activePage === 'contact'"
+>
+      <h3>📞 <span data-i18n="contact">Contact Us</span></h3>
+      <p>Email: campuslibrary@example.edu</p>
+      <p>Phone: (000) 000-0000</p>
+      <p>Address: University Avenue</p>
+    </section>
+
+    <footer>
+      &copy; <span id="copyright-year"></span> USTP Metro Library.
+    </footer>
+  </main>
+
+  <!-- Modals -->
+  <!-- PROFILE MODAL -->
+<div
+  id="profile-modal"
+  class="profile-modal"
+  *ngIf="showProfileModal"
+>
+
+  <div class="profile-content">
+
+    <button
+      class="modal-close"
+      (click)="closeProfileModal()"
+    >
+      ✕
+    </button>
+
+    <div class="profile-header">
+
+      <img
+        [src]="
+          currentUser?.profileImage ||
+          defaultAvatar(currentUser?.sex)
+        "
+        class="profile-avatar"
+      >
+
+      <h2>{{ currentUser?.fullName }}</h2>
+
+      <p>{{ currentUser?.role }}</p>
+
+      <label class="upload-btn">
+
+        Change Photo
+
+        <input
+          type="file"
+          hidden
+          accept="image/*"
+          (change)="onProfileImageSelected($event)"
+        >
+
+      </label>
+
+    </div>
+
+    <div class="profile-info">
+
+      <label>Full Name</label>
+      <input [(ngModel)]="selectedUser.fullName">
+
+      <label>Student ID</label>
+      <input [(ngModel)]="selectedUser.studentId">
+
+      <label>Username</label>
+      <input [(ngModel)]="selectedUser.username">
+
+      <label>Sex</label>
+      <input [(ngModel)]="selectedUser.sex">
+
+      <label>Age</label>
+      <input [(ngModel)]="selectedUser.age">
+
+      <label>City</label>
+      <input [(ngModel)]="selectedUser.city">
+
+      <label>Phone</label>
+      <input [(ngModel)]="selectedUser.phone">
+
+      <label>Bio</label>
+      <textarea [(ngModel)]="selectedUser.bio"></textarea>
+
+      <label>Interests</label>
+      <textarea [(ngModel)]="selectedUser.interests"></textarea>
+
+      <button
+        class="save-profile-btn"
+        (click)="saveProfile()"
+      >
+        Save Changes
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- ADD BOOK MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showAddBookModal"
+>
+
+  <div class="book-modal">
+
+    <button
+      class="close-modal"
+      (click)="showAddBookModal=false"
+    >
+      ✕
+    </button>
+
+    <h2>➕ Add New Book</h2>
+
+    <input
+      type="text"
+      [(ngModel)]="bookTitle"
+      placeholder="Book Title"
+    >
+
+    <input
+      type="text"
+      [(ngModel)]="bookAuthor"
+      placeholder="Author"
+    >
+
+    <select
+      [(ngModel)]="bookCategory"
+    >
+
+      <option>
+        Programming
+      </option>
+
+      <option>
+        Science
+      </option>
+
+      <option>
+        Math
+      </option>
+
+      <option>
+        History
+      </option>
+
+    </select>
+
+    <textarea
+      [(ngModel)]="bookDescription"
+      placeholder="Description"
+    ></textarea>
+
+    <input
+      type="file"
+      accept="image/*"
+      (change)="onBookImageSelected($event)"
+    >
+
+    <img
+      *ngIf="previewImage"
+      [src]="previewImage"
+      class="preview-book"
+    >
+
+    <button
+      class="save-book-btn"
+      (click)="addBook()"
+    >
+      Save Book
+    </button>
+
+  </div>
+
+</div>
+
+<!-- BOOK DETAILS MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showBookModal"
+>
+
+  <div class="details-modal">
+
+    <button
+      class="close-modal"
+      (click)="closeBookModal()"
+    >
+      ✕
+    </button>
+
+    <img
+      [src]="selectedBookData?.image"
+    >
+
+    <h2>
+      {{ selectedBookData?.title }}
+    </h2>
+
+    <p>
+      {{ selectedBookData?.author }}
+    </p>
+
+    <span>
+      {{ selectedBookData?.category }}
+    </span>
+
+    <div class="details-desc">
+
+      {{
+        selectedBookData?.description
+      }}
+
+    </div>
+
+  </div>
+
+</div>
+<button id="back-to-top">
+  ↑
+</button>

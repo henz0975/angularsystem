@@ -1,0 +1,215 @@
+<div class="register-page">
+
+  <!-- LEFT SIDE -->
+  <div class="left-panel">
+
+    <div class="overlay"></div>
+
+    <div class="brand-box">
+
+      <div class="logo-icon">📚</div>
+
+      <h1>
+        <span class="white">USTP</span>
+        <span class="yellow"> Library</span>
+      </h1>
+
+      <p>Explore • Borrow • Learn</p>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="register-container">
+
+    <div class="register-card">
+
+      <h1>Create Account</h1>
+
+      <h2>Personal & Account Info</h2>
+
+      <form (ngSubmit)="register()">
+
+        <div class="grid">
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              [(ngModel)]="fullName"
+              name="fullName"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Student ID</label>
+            <input
+              type="text"
+              [(ngModel)]="studentId"
+              name="studentId"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Username or ID</label>
+            <input
+              type="text"
+              [(ngModel)]="username"
+              name="username"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Sex</label>
+
+            <select
+              [(ngModel)]="sex"
+              name="sex"
+            >
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Birth</label>
+
+            <input
+              type="date"
+              [(ngModel)]="birth"
+              name="birth"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Age</label>
+
+            <input
+              type="number"
+              [(ngModel)]="age"
+              name="age"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Place / City</label>
+
+            <input
+              type="text"
+              [(ngModel)]="city"
+              name="city"
+            >
+          </div>
+
+        </div>
+
+        <div class="full-group">
+
+          <label>Phone</label>
+
+          <input
+            type="text"
+            [(ngModel)]="phone"
+            name="phone"
+          >
+
+        </div>
+
+        <div class="full-group">
+
+          <label>About / Bio</label>
+
+          <textarea
+            [(ngModel)]="bio"
+            name="bio"
+          ></textarea>
+
+        </div>
+
+        <div class="full-group">
+
+          <label>Interests</label>
+
+          <textarea
+            [(ngModel)]="interests"
+            name="interests"
+            placeholder="e.g. reading, basketball"
+          ></textarea>
+
+        </div>
+
+        <div class="full-group">
+
+          <label>Photo</label>
+
+          <input
+            type="file"
+            (change)="onImageSelected($event)"
+          >
+
+        </div>
+
+        <div class="full-group">
+
+          <label>User Role</label>
+
+          <select
+            [(ngModel)]="role"
+            name="role"
+          >
+            <option value="student">
+              Student
+            </option>
+
+            <option value="admin">
+              Admin
+            </option>
+          </select>
+          <div *ngIf="role === 'admin'" class="admin-box">
+
+  <input
+  type="password"
+  [(ngModel)]="adminKey"
+  name="adminKey"
+  placeholder="Admin Secret Key"
+>
+
+</div>
+
+        </div>
+
+        <button type="submit">
+          Sign Up
+        </button>
+
+      </form>
+
+      <p class="login-link">
+
+        Already have an account?
+
+        <a routerLink="/login">
+          Back to Login
+        </a>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

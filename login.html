@@ -1,0 +1,83 @@
+<div class="login-wrapper">
+
+  <div class="overlay"></div>
+
+  <div class="welcome-box">
+
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/2702/2702134.png"
+      class="logo"
+    >
+
+    <h1>
+      USTP <span>Library</span>
+    </h1>
+
+    <p>
+      Explore • Borrow • Learn
+    </p>
+
+  </div>
+
+  <div class="login-card">
+
+    <h2>
+      Welcome Back 👋
+    </h2>
+
+    <small>
+      Login to your account
+    </small>
+
+    <form (ngSubmit)="login()">
+
+      <label>
+        Username or ID
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="username"
+        name="username"
+        placeholder="Enter username"
+      >
+
+      <label>
+        Password
+      </label>
+
+      <input
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Enter password"
+      >
+
+      <button type="submit">
+        Login →
+      </button>
+
+    </form>
+
+    <div class="bottom-text">
+
+      No account?
+
+      <a routerLink="/register">
+        <span
+  class="auth-link"
+  routerLink="/register"
+>
+  Create one
+</span>
+      </a>
+
+      <br><br>
+
+      admin/admin • student/student
+
+    </div>
+
+  </div>
+
+</div>
